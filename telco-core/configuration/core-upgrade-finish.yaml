@@ -72,6 +72,19 @@ policies:
   # removes the 4 PinnedImageSet CRs created by core-upgrade-precache policies
   # after the upgrade completes. Safe to include even when pre-caching was not
   # used — mustnothave is compliant when the objects do not exist.
+  - name: core-upgrade-precache-cleanup-4-22
+    policyAnnotations:
+      ran.openshift.io/soak-seconds: "30"
+    manifests:
+      - path: reference-crs/optional/other/precache/controlplane-olm-pinned-images.yaml
+        complianceType: mustnothave
+      - path: reference-crs/optional/other/precache/controlplane-releases-pinned-images.yaml
+        complianceType: mustnothave
+      - path: reference-crs/optional/other/precache/worker-olm-pinned-images.yaml
+        complianceType: mustnothave
+      - path: reference-crs/optional/other/precache/worker-releases-pinned-images.yaml
+        complianceType: mustnothave
+
   - name: core-upgrade-precache-cleanup-5-0
     policyAnnotations:
       ran.openshift.io/soak-seconds: "30"

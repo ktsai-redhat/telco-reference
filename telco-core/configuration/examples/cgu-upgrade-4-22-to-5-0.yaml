@@ -1,0 +1,104 @@
+---
+# Example ClusterGroupUpgrade CRs for orchestrating a 4.22 to 5.0 upgrade
+# This demonstrates an EUS-to-EUS double upgrade where:
+# 1. Control plane upgrades from 4.22 to 5.0
+# 2. Worker nodes remain paused during control plane upgrade
+# 3. Workers upgrade after control plane completes
+
+# First control plane upgrade: 4.22
+---
+apiVersion: ran.openshift.io/v1alpha1
+kind: ClusterGroupUpgrade
+metadata:
+  name: upgrade-4-22
+  namespace: default
+spec:
+  actions:
+    afterCompletion:
+      deleteClusterLabels:
+        upgrade-version-4-22: ""
+      deleteObjects: true
+  clusters:
+  - <cluster-name>
+  enable: true
+  managedPolicies:
+    - core-upgrade-prep-4-22
+    - core-upgrade-ocp-4-22
+    - core-upgrade-olm-4-22
+    - core-upgrade-validate-4-22
+  remediationStrategy:
+    maxConcurrency: 1
+    timeout: 480
+
+# Second control plane upgrade: 5.0
+---
+apiVersion: ran.openshift.io/v1alpha1
+kind: ClusterGroupUpgrade
+metadata:
+  name: upgrade-5-0
+  namespace: default
+spec:
+  actions:
+    afterCompletion:
+      deleteClusterLabels:
+        upgrade-version-5-0: ""
+      deleteObjects: true
+  clusters:
+  - <cluster-name>
+  enable: true
+  managedPolicies:
+    - core-upgrade-prep-5-0
+    - core-upgrade-ocp-5-0
+    - core-upgrade-olm-5-0
+    - core-upgrade-validate-5-0
+  remediationStrategy:
+    maxConcurrency: 1
+    timeout: 480
+  blockingCRs:
+  - name: upgrade-4-22
+    namespace: default
+
+# Release worker nodes for upgrade
+---
+apiVersion: ran.openshift.io/v1alpha1
+kind: ClusterGroupUpgrade
+metadata:
+  name: upgrade-finish
+  namespace: default
+spec:
+  clusters:
+  - <cluster-name>
+  enable: true
+  managedPolicies:
+    # These policies unpause the MCP
+    - core-upgrade-workers-1
+    - core-upgrade-workers-2
+    - core-upgrade-workers-3
+  remediationStrategy:
+    maxConcurrency: 1
+    timeout: 480
+  blockingCRs:
+  - name: upgrade-5-0
+    namespace: default
+
+# Optional: Pre-caching (run before upgrade maintenance window)
+---
+apiVersion: ran.openshift.io/v1alpha1
+kind: ClusterGroupUpgrade
+metadata:
+  name: upgrade-precache
+  namespace: default
+spec:
+  clusters:
+  - <cluster-name>
+  enable: true
+  managedPolicies:
+    - core-upgrade-precache-controlplane-4-22
+    - core-upgrade-precache-worker-4-22
+    - core-upgrade-precache-validator-4-22
+    - core-upgrade-precache-controlplane-5-0
+    - core-upgrade-precache-worker-5-0
+    - core-upgrade-precache-validator-5-0
+  remediationStrategy:
+    maxConcurrency: 1
+    timeout: 240
