@@ -26,7 +26,7 @@ policies:
         patches:
         - spec:
             pinnedImages:
-              - name: "registry.redhat.io/redhat/redhat-operator-index@sha256:<sha>"
+              - name: "registry.redhat.io/redhat/redhat-operator-index:v5.0"
               # - name: "<add remaining OLM images here>"
       - path: reference-crs/optional/other/precache/controlplane-releases-pinned-images.yaml
         complianceType: mustonlyhave
@@ -34,7 +34,7 @@ policies:
         patches:
         - spec:
             pinnedImages:
-              - name: "quay.io/openshift-release-dev/ocp-release@sha256:<sha>"
+              - name: "quay.io/openshift-release-dev/ocp-release@sha256:5d7ed8b3e98bc3a10c50f36f07262a962d59ad2d3ea5fb4935ff10c408c02e55"
               # - name: "<add remaining release images here>"
   - name: core-upgrade-precache-worker-5-0
     policyAnnotations:
@@ -46,7 +46,7 @@ policies:
         patches:
         - spec:
             pinnedImages:
-              - name: "registry.redhat.io/redhat/redhat-operator-index@sha256:<sha>"
+              - name: "registry.redhat.io/redhat/redhat-operator-index:v5.0"
               # - name: "<add remaining OLM images here>"
       - path: reference-crs/optional/other/precache/worker-releases-pinned-images.yaml
         complianceType: mustonlyhave
@@ -54,7 +54,7 @@ policies:
         patches:
         - spec:
             pinnedImages:
-              - name: "quay.io/openshift-release-dev/ocp-release@sha256:<sha>"
+              - name: "quay.io/openshift-release-dev/ocp-release@sha256:5d7ed8b3e98bc3a10c50f36f07262a962d59ad2d3ea5fb4935ff10c408c02e55"
               # - name: "<add remaining release images here>"
   - name: core-upgrade-precache-validator-5-0
     policyAnnotations:

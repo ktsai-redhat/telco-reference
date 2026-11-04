@@ -62,7 +62,7 @@ policies:
             desiredUpdate:
               # Replace version, image and status below with desired version
               version: 4.22.0
-              image: quay.io/openshift-release-dev/ocp-release@sha256:<TBD>
+              image: quay.io/openshift-release-dev/ocp-release@sha256:283887f2860a745387608d106e70e5be2314df2497ee08c69e7bc669ca091340
               force: true
         - status:
             history:
